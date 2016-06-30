@@ -7,7 +7,7 @@ RUN apt-get update && \
     wget -qO- https://deb.nodesource.com/setup_6.x | bash - && \
     apt-get update && \
     apt-get install -y mono-runtime build-essential libmono-2.0-dev mono-dmcs pkg-config python libfontconfig nodejs && \
-    xz simsun.ttc.xz && \
+    xz -d simsun.ttc.xz && \
     cp /myapp/simsun.ttc /usr/share/fonts/truetype/ && \
     npm install
 
