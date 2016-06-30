@@ -1,10 +1,12 @@
 var express = require("express"),
     app = express(),
     bodyParser = require("body-parser"),
-    pdfGenerator = require("./pdf-generator");
+    pdfGenerator = require("./pdf-generator"),
+    fs = require("fs");
 
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 
 
@@ -21,6 +23,9 @@ app.use(bodyParser.json());
 app.post("/",function(req,res){
     var content = req.body.content;
     var pageSize = req.body.pageSize;
+    if(!content) {
+        return res.status(500).end("no content to convert");
+    }
     pdfGenerator.generatePDF(content,pageSize)
         .then((filename)=>{
             res.attachment(filename);

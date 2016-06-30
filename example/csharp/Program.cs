@@ -2,58 +2,65 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace ConsoleApplication
 {
     public class Program
     {
-        public Stream GetPostContent()
+        public byte[] GetPostContent()
         {
-            System.IO.MemoryStream contentStream = new MemoryStream();
-            StreamWriter sw = new StreamWriter(contentStream);
-            sw.WriteLine(@"{
-                content: '<html><body><div>Hello World!</div></body></html>',
-                pageSize: {
-                    format: 'A4',
-                    orientation: 'landscape',
-                    margin: {
-                        top: '1cm',
-                        bottom: '3cm'
-                        left: '1cm'
-                        right: '1cm'
-                    }
-                }
-            }");
-            sw.Flush();
-            return contentStream;
+            JObject postContent = new JObject(
+                new JProperty("content","<html><body><div>Hello World!</div></body></html>"),
+                new JProperty("pageSize",new JObject(
+                    new JProperty("format","A4"),
+                    new JProperty("orientation","landscape"),
+                    new JProperty("margin",new JObject(
+                        new JProperty("top","1cm"),
+                        new JProperty("bottom","1cm"),
+                        new JProperty("left","1cm"),
+                        new JProperty("right","1cm")
+                    ))
+                ))
+            );
+
+            return System.Text.Encoding.UTF8.GetBytes(postContent.ToString());
         }
-        public async Task<byte[]> GetPDF() 
+        public async Task<byte[]> GetPDF()
         {
             using(var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://pdf-generator/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                
-                StreamContent postContent = new StreamContent(GetPostContent());
+
+                ByteArrayContent postContent = new ByteArrayContent(GetPostContent());
                 postContent.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                HttpResponseMessage response = await client.PostAsync("/",postContent);
+                try {
+                    HttpResponseMessage response = await client.PostAsync("/",postContent);
 
-                postContent.Dispose();
+                    postContent.Dispose();
 
-                if(response.IsSuccessStatusCode)
-                {
-                    foreach(var header in response.Content.Headers)
+                    if(response.IsSuccessStatusCode)
                     {
-                        System.Console.WriteLine("{0}:{1}",header.Key, header.Value);
+                        foreach(var header in response.Content.Headers)
+                        {
+                            System.Console.Write("{0}:",header.Key);
+                            foreach(var v in header.Value){
+                                System.Console.Write("{0}, ",v);
+                            }
+                            System.Console.WriteLine();
+                        }
+                        return await response.Content.ReadAsByteArrayAsync();
                     }
-                    return await response.Content.ReadAsByteArrayAsync();
-                } else {
-                    return null;
                 }
+                catch(AggregateException ex) {
+                    Console.Error.WriteLine(ex.StackTrace);
+                }
+                return null;
+
             }
-            
+
         }
 
         public static void Main(string[] args)
@@ -62,8 +69,6 @@ namespace ConsoleApplication
             System.Console.WriteLine("Sending request...");
             var t = p.GetPDF();
             t.Wait();
-            Console.Write("Press any key to continue...");
-            Console.ReadKey();
         }
     }
 }

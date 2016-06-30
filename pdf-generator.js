@@ -70,8 +70,8 @@ class PDFGenerator {
         return Promise.coroutine(function*(){
             yield that.sitePage.property('pageSize',pageSize);
             var tempName = temp.path({prefix:'pdfgen',suffix:'.pdf'});
-            that.sitePage.setContent(content,"http://www.example.com");
-            that.sitePage.render(tempName);
+            yield that.sitePage.setContent(content,"http://www.example.com");
+            yield that.sitePage.render(tempName);
             //return Promise.resolve(tempfile);
             return Promise.resolve(tempName);
         })();
