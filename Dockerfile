@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:16.04
 ADD . /myapp
 WORKDIR /myapp
 RUN cat /etc/apt/sources.list | sed 's/archive.ubuntu/cn.archive.ubuntu/' > sources.list2 &&

@@ -37,6 +37,10 @@ app.post("/",function(req,res){
         });
 });
 
+app.get("/",function(req,res){
+    res.end("Hello from pdf-generator");
+});
+
 
 
 pdfGenerator.init().then(()=>{
