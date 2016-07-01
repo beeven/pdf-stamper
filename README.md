@@ -29,9 +29,12 @@ API
 ----
 
 ### Generate pdf without signature
-**PATH:** /
-**METHOD:** POST
-**ARGUMENTS:**
+
+**path:** /
+
+**method:** POST
+
+**arguments:**
 * *content:* html content to convert
 * *pageSize:* page size configuration
     * *format:* paper size, `'A4', `'A5', `'B5'`, etc

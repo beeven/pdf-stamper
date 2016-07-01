@@ -17,7 +17,7 @@ public class Startup
     public string pfxFile = @"/myapp/certificates/ca.pfx";
     public string pfxPassword = "123456";
     public string outFileSuffix = "signed";
-    public string stampImage = @"/myapp/stamp.png";
+    public string stampImage = @"/myapp/stamper/stamp.png";
     public Startup()
     {
         Pkcs12Store pkcs12 = new Pkcs12Store(new FileStream(pfxFile, FileMode.Open, FileAccess.Read), pfxPassword.ToArray());
