@@ -12,9 +12,9 @@
   "dependencies": {
     "bluebird": "^3.4.1",
     "body-parser": "^1.15.2",
+    "edge": "^5.0.0",
     "express": "^4.14.0",
     "phantom": "^2.1.9",
-    "temp": "^0.8.3",
-    "edge": "5.0.0"
+    "temp": "^0.8.3"
   }
 }

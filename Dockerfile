@@ -9,7 +9,8 @@ RUN apt-get update && \
     apt-get install -y mono-runtime build-essential libmono-2.0-dev mono-dmcs pkg-config python libfontconfig nodejs nano && \
     xz -d simsun.ttc.xz && \
     cp /myapp/simsun.ttc /usr/share/fonts/truetype/ && \
+    npm install -g node-gyp mocha && \
+    node-gyp install && \
     npm install
-
 EXPOSE 80
 CMD node server.js
