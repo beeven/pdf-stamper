@@ -2,6 +2,7 @@ var express = require("express"),
     app = express(),
     bodyParser = require("body-parser"),
     pdfGenerator = require("./pdf-generator"),
+    stamper = require("./stamper"),
     fs = require("fs");
 
 
